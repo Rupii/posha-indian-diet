@@ -40,8 +40,8 @@ interface Supplement {
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
-const MOCK_WEEK = 11
-const MOCK_DUE_DATE = new Date('2026-07-20')
+const MOCK_WEEK = 33
+const MOCK_DUE_DATE = new Date('2026-05-25')
 
 const NUTRIENTS: Record<Trimester, Nutrient[]> = {
   T1: [
@@ -243,7 +243,7 @@ function SupplementRow({
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function PregnancyPage() {
-  const [trimester, setTrimester] = useState<Trimester>('T1')
+  const [trimester, setTrimester] = useState<Trimester>('T3')
   const [gdOn, setGdOn] = useState(false)
   const [supplements, setSupplements] = useState<Supplement[]>(INITIAL_SUPPLEMENTS)
 

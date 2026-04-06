@@ -3,15 +3,22 @@ import Link from 'next/link'
 // Placeholder data — replace with Supabase queries
 const TODAY = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
 
+function getGreeting() {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 17) return 'Good afternoon'
+  return 'Good evening'
+}
+
 const MOCK_SLOTS = [
-  { id: '1', slotType: 'Breakfast', time: '8–9 am', recipe: 'Poha', calories: 250, done: true },
-  { id: '2', slotType: 'Morning snack', time: '11 am', recipe: 'Roasted makhana', calories: 100, done: true },
-  { id: '3', slotType: 'Lunch', time: '1–2 pm', recipe: 'Dal tadka + Jeera rice', calories: 450, done: false },
-  { id: '4', slotType: 'Chai snack', time: '4–5 pm', recipe: 'Sprouts chaat', calories: 120, done: false },
-  { id: '5', slotType: 'Dinner', time: '8–9 pm', recipe: 'Palak paneer + 2 roti', calories: 380, done: false },
+  { id: '1', slotType: 'Breakfast', time: '8–9 am', recipe: 'Methi thepla + dahi', calories: 320, done: true },
+  { id: '2', slotType: 'Morning snack', time: '11 am', recipe: 'Roasted makhana + warm milk', calories: 160, done: true },
+  { id: '3', slotType: 'Lunch', time: '1–2 pm', recipe: 'Surmai fish curry + 1 katori rice + salad', calories: 520, done: false },
+  { id: '4', slotType: 'Chai snack', time: '4–5 pm', recipe: 'Dates + walnut + 1 glass doodh', calories: 180, done: false },
+  { id: '5', slotType: 'Dinner', time: '8–9 pm', recipe: 'Palak dal + 2 phulka + gajar sabzi', calories: 440, done: false },
 ]
 
-const TOTALS = { consumed: 350, target: 1800, protein: 18, proteinTarget: 60 }
+const TOTALS = { consumed: 480, target: 2200, protein: 22, proteinTarget: 75 }
 
 export default function DashboardPage() {
   return (
@@ -22,7 +29,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="pt-6 pb-4">
           <p className="text-warm-400 text-sm">{TODAY}</p>
-          <h1 className="text-2xl font-bold text-warm-900 mt-0.5">Good morning, Priya 👋</h1>
+          <h1 className="text-2xl font-bold text-warm-900 mt-0.5">{getGreeting()}, Haritha 👋</h1>
         </div>
 
         {/* Nutrition ring + summary */}
@@ -161,7 +168,7 @@ function AppNav() {
         <span className="font-bold text-warm-900">Posha</span>
       </div>
       <button className="w-8 h-8 rounded-full bg-saffron-100 flex items-center justify-center text-sm font-bold text-saffron-700">
-        P
+        H
       </button>
     </nav>
   )

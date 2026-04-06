@@ -10,14 +10,14 @@ const SLOTS = [
     time: '8–9 am',
     emoji: '🌅',
     recipe: {
-      name: 'Poha',
-      region: 'West Indian',
-      calories: 250,
-      protein: 5.5,
-      carbs: 48,
-      fat: 4.5,
-      serving: '1½ katori',
-      tags: ['Iron-fortified', 'Light'],
+      name: 'Methi Thepla + Dahi',
+      region: 'Gujarati',
+      calories: 320,
+      protein: 10,
+      carbs: 42,
+      fat: 11,
+      serving: '2 thepla + ½ katori dahi',
+      tags: ['Iron-rich', 'Calcium-rich', 'Folate'],
     },
   },
   {
@@ -26,14 +26,14 @@ const SLOTS = [
     time: '11 am',
     emoji: '🌿',
     recipe: {
-      name: 'Roasted Makhana',
+      name: 'Roasted Makhana + Warm Milk',
       region: 'All India',
-      calories: 100,
-      protein: 3.2,
-      carbs: 25,
-      fat: 0.5,
-      serving: '1 katori',
-      tags: ['High-fiber', 'Low-fat'],
+      calories: 160,
+      protein: 6.5,
+      carbs: 28,
+      fat: 3,
+      serving: '1 katori makhana + 1 glass milk',
+      tags: ['Calcium-rich', 'High-fiber', 'Bone health'],
     },
   },
   {
@@ -42,14 +42,14 @@ const SLOTS = [
     time: '1–2 pm',
     emoji: '☀️',
     recipe: {
-      name: 'Dal Tadka + Jeera Rice',
-      region: 'North Indian',
-      calories: 450,
-      protein: 16.5,
-      carbs: 78,
-      fat: 10,
-      serving: '1½ katori dal + 1 katori rice',
-      tags: ['High-protein', 'Iron-rich'],
+      name: 'Surmai Fish Curry + Rice + Kachumber Salad',
+      region: 'Coastal Indian',
+      calories: 520,
+      protein: 28,
+      carbs: 55,
+      fat: 14,
+      serving: '1 medium piece fish curry + 1 katori rice + salad',
+      tags: ['High-protein', 'Omega-3', 'Iron-rich', 'DHA for baby'],
     },
   },
   {
@@ -58,14 +58,14 @@ const SLOTS = [
     time: '4–5 pm',
     emoji: '🍵',
     recipe: {
-      name: 'Sprouts Chaat',
+      name: 'Dates, Walnuts + Doodh',
       region: 'All India',
-      calories: 120,
-      protein: 7,
-      carbs: 18,
-      fat: 2,
-      serving: '1 katori',
-      tags: ['High-protein', 'Raw', 'Cooling'],
+      calories: 180,
+      protein: 5.5,
+      carbs: 26,
+      fat: 7,
+      serving: '3 dates + 4 walnut halves + 1 glass milk',
+      tags: ['Iron-rich', 'Calcium-rich', 'Brain health'],
     },
   },
   {
@@ -74,14 +74,14 @@ const SLOTS = [
     time: '8–9 pm',
     emoji: '🌙',
     recipe: {
-      name: 'Palak Paneer + 2 Roti',
+      name: 'Palak Dal + 2 Phulka + Gajar Sabzi',
       region: 'North Indian',
-      calories: 380,
-      protein: 18,
-      carbs: 38,
-      fat: 18,
-      serving: '1 katori sabzi + 2 roti',
-      tags: ['Iron-rich', 'Calcium-rich'],
+      calories: 440,
+      protein: 17,
+      carbs: 62,
+      fat: 10,
+      serving: '1½ katori dal + 2 phulka + ½ katori sabzi',
+      tags: ['Iron-rich', 'Folate', 'High-fiber', 'Vitamin A'],
     },
   },
 ]
@@ -102,10 +102,10 @@ export default function MealPlansPage() {
           <p className="text-xs text-warm-400 mb-3">Daily totals</p>
           <div className="grid grid-cols-4 gap-3 text-center">
             {[
-              { label: 'Calories', value: '1300', unit: 'kcal', color: 'text-saffron-600' },
-              { label: 'Protein', value: '50', unit: 'g', color: 'text-forest-500' },
-              { label: 'Carbs', value: '207', unit: 'g', color: 'text-orange-500' },
-              { label: 'Fat', value: '35', unit: 'g', color: 'text-amber-500' },
+              { label: 'Calories', value: '1620', unit: 'kcal', color: 'text-saffron-600' },
+              { label: 'Protein', value: '67', unit: 'g', color: 'text-forest-500' },
+              { label: 'Carbs', value: '213', unit: 'g', color: 'text-orange-500' },
+              { label: 'Fat', value: '45', unit: 'g', color: 'text-amber-500' },
             ].map((m) => (
               <div key={m.label}>
                 <p className={`text-xl font-bold ${m.color}`}>{m.value}</p>
@@ -187,15 +187,15 @@ function MealSwapModal({
   const [tab, setTab] = useState<'nutrition' | 'type'>('nutrition')
 
   const similarNutrition = [
-    { name: 'Upma', serving: '1½ katori', calories: 240, protein: 6, tags: ['Veg', 'Light'] },
-    { name: 'Besan Cheela', serving: '2 pieces', calories: 260, protein: 10, tags: ['High-protein', 'Veg'] },
-    { name: 'Oats Khichdi', serving: '1 katori', calories: 245, protein: 7, tags: ['High-fiber', 'Veg'] },
+    { name: 'Moong Dal Cheela + Dahi', serving: '2 cheela + ½ katori dahi', calories: 310, protein: 14, tags: ['High-protein', 'Calcium-rich'] },
+    { name: 'Ragi Dosa + Coconut Chutney', serving: '2 dosa + chutney', calories: 290, protein: 8, tags: ['Calcium-rich', 'Millet', 'South Indian'] },
+    { name: 'Sabudana Khichdi + Peanuts', serving: '1½ katori', calories: 330, protein: 8, tags: ['Iron-rich', 'Energy-dense'] },
   ]
 
   const sameType = [
-    { name: 'Masala Dosa', serving: '1 dosa + chutney', calories: 285, protein: 8, tags: ['South Indian'] },
-    { name: 'Idli + Sambar', serving: '2 idli + ½ katori sambar', calories: 290, protein: 12, tags: ['Fermented', 'Veg'] },
-    { name: 'Ragi Porridge', serving: '1 katori', calories: 210, protein: 6.5, tags: ['Millet', 'Calcium-rich'] },
+    { name: 'Besan Cheela + Pudina Chutney', serving: '2 cheela + chutney', calories: 270, protein: 12, tags: ['High-protein', 'Veg'] },
+    { name: 'Idli + Sambar + Coconut Chutney', serving: '3 idli + ½ katori sambar', calories: 305, protein: 11, tags: ['Fermented', 'Gut-friendly', 'South Indian'] },
+    { name: 'Chicken Keema Paratha', serving: '1 paratha', calories: 340, protein: 18, tags: ['High-protein', 'Non-veg', 'Iron-rich'] },
   ]
 
   const options = tab === 'nutrition' ? similarNutrition : sameType
