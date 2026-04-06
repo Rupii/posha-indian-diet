@@ -1,0 +1,30 @@
+{
+  "name": "posha",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "db:push": "turbo run db:push --filter=@posha/db",
+    "db:migrate": "turbo run db:migrate --filter=@posha/db",
+    "db:seed": "turbo run db:seed --filter=@posha/db",
+    "db:studio": "turbo run db:studio --filter=@posha/db"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0",
+    "prettier": "^3.2.0",
+    "eslint": "^8.57.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "npm@10.0.0"
+}

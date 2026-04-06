@@ -1,0 +1,339 @@
+// Posha — Indian Diet Platform
+// Prisma Schema v1
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Segment {
+  GENERAL
+  PREGNANT
+  POSTPARTUM
+}
+
+enum DietaryPref {
+  VEG
+  EGG
+  NON_VEG
+  JAIN
+  SATVIK
+}
+
+enum FastingPref {
+  EKADASHI
+  NAVRATRI
+  RAMZAN
+  MONDAY
+  CUSTOM
+}
+
+enum Prakriti {
+  VATA
+  PITTA
+  KAPHA
+  UNKNOWN
+}
+
+enum UnitPref {
+  KATORI
+  GRAMS
+}
+
+enum ConditionTrack {
+  PCOS
+  DIABETES
+  HYPERTENSION
+  THYROID
+  POST_SURGERY
+}
+
+enum MealType {
+  BREAKFAST
+  SNACK
+  LUNCH
+  DINNER
+  DRINK
+}
+
+enum SlotType {
+  BREAKFAST
+  MORNING_SNACK
+  LUNCH
+  CHAI_SNACK
+  DINNER
+}
+
+enum BudgetTier {
+  BUDGET
+  MODERATE
+  PREMIUM
+}
+
+enum DeliveryType {
+  NORMAL
+  CSECTION
+}
+
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id             String      @id @default(uuid())
+  email          String      @unique
+  name           String?
+  avatarUrl      String?
+  segment        Segment     @default(GENERAL)
+  region         String      @default("north") // north | south | east | west
+  dietaryPref    DietaryPref @default(VEG)
+  fastingPrefs   FastingPref[]
+  prakriti       Prakriti    @default(UNKNOWN)
+  unitPreference UnitPref    @default(KATORI) // user-chosen — never app-decided
+
+  pregnancyProfile   PregnancyProfile?
+  postpartumProfile  PostpartumProfile?
+  conditions         UserCondition[]
+  mealPlans          MealPlan[]
+  foodLogs           FoodLog[]
+  swapHistory        SwapHistory[]
+  mealSwaps          MealSwap[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ─── Recipe ───────────────────────────────────────────────────────────────────
+
+model Recipe {
+  id          String      @id @default(uuid())
+  name        String
+  nameHindi   String?
+  description String?
+
+  region      String      // north | south | east | west | all
+  mealType    MealType
+  dietaryTags DietaryPref[]
+  cookTimeMinutes Int
+  budgetTier  BudgetTier  @default(BUDGET)
+
+  // Nutrition per serving (stored in grams internally — display per unitPreference)
+  servingGrams  Float
+  servingKatori Float
+  calories  Float
+  protein   Float
+  carbs     Float
+  fat       Float
+  fiber     Float
+  iron      Float
+  calcium   Float
+  folate    Float
+
+  // Tags for filtering + swap matching
+  healthTags    String[]  // iron-rich, high-protein, low-GI, etc.
+  conditionTags String[]  // pcos-safe, diabetes-friendly, etc.
+  swapTags      String[]  // dal-based, rice-dish, flatbread, etc.
+
+  seasonalMonths       Int[]    // 1–12 months this is in season
+  fastingSafe          Boolean  @default(false)
+  pregnancySafe        Boolean  @default(true)
+  postpartumRecommended Boolean @default(false)
+
+  ingredients  RecipeIngredient[]
+  mealSlots    MealSlot[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("recipes")
+}
+
+// ─── Ingredient ───────────────────────────────────────────────────────────────
+
+model Ingredient {
+  id        String  @id @default(uuid())
+  name      String
+  nameHindi String?
+  category  String  // legume | grain | vegetable | dairy | meat | nut | spice | oil | fruit | superfood
+
+  // Per 100g (IFCT 2017 base)
+  calories Float
+  protein  Float
+  carbs    Float
+  fat      Float
+  fiber    Float
+  iron     Float
+  calcium  Float
+  folate   Float
+  vitC     Float  @default(0)
+
+  katorEquivalentGrams Float   // 1 standard katori = ? grams for this ingredient
+  commonUnit           String  // katori | tbsp | tsp | piece | ml
+
+  recipes RecipeIngredient[]
+
+  @@map("ingredients")
+}
+
+model RecipeIngredient {
+  id           String     @id @default(uuid())
+  recipeId     String
+  ingredientId String
+  amountGrams  Float
+  amountKatori Float
+  unit         String     // katori | tbsp | tsp | piece | ml
+
+  recipe     Recipe     @relation(fields: [recipeId], references: [id])
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@map("recipe_ingredients")
+}
+
+// ─── Meal Plans ───────────────────────────────────────────────────────────────
+
+model MealPlan {
+  id          String     @id @default(uuid())
+  userId      String
+  date        DateTime   @db.Date
+  generatedAt DateTime   @default(now())
+
+  user  User       @relation(fields: [userId], references: [id])
+  slots MealSlot[]
+
+  @@unique([userId, date])
+  @@map("meal_plans")
+}
+
+model MealSlot {
+  id                String   @id @default(uuid())
+  mealPlanId        String
+  slotType          SlotType
+  recipeId          String
+  portionMultiplier Float    @default(1.0)
+  swappedFromId     String?  // original recipe id if this was swapped
+
+  mealPlan MealPlan @relation(fields: [mealPlanId], references: [id])
+  recipe   Recipe   @relation(fields: [recipeId], references: [id])
+
+  @@map("meal_slots")
+}
+
+// ─── Meal Swaps ───────────────────────────────────────────────────────────────
+
+model MealSwap {
+  id               String    @id @default(uuid())
+  userId           String
+  slotType         SlotType
+  originalRecipeId String
+  similarNutrition String[]  // recipe ids: ±10% calories, same dominant macro
+  sameType         String[]  // recipe ids: same meal type, different dish
+  rejectedUntil    DateTime? // null = not rejected; set when user rejects
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("meal_swaps")
+}
+
+// ─── Food Log ─────────────────────────────────────────────────────────────────
+
+model FoodLog {
+  id          String   @id @default(uuid())
+  userId      String
+  loggedAt    DateTime @default(now())
+  recipeId    String?
+  customName  String?
+  amountGrams Float
+  unitUsed    UnitPref // was this logged in katori or grams — user chose
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+  notes       String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("food_logs")
+}
+
+// ─── Swap History ─────────────────────────────────────────────────────────────
+
+model SwapHistory {
+  id               String   @id @default(uuid())
+  userId           String
+  rejectedRecipeId String
+  reason           String?  // dont_like | already_had | not_in_mood
+  rejectedAt       DateTime @default(now())
+  expiresAt        DateTime // rejectedAt + 7 days
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("swap_history")
+}
+
+// ─── Pregnancy Profile ────────────────────────────────────────────────────────
+
+model PregnancyProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  dueDate     DateTime
+  trimester   Int      // 1 | 2 | 3 — computed but stored for quick access
+  supplements String[] // folic-acid | iron | calcium | d3 | etc.
+  hasGD       Boolean  @default(false) // gestational diabetes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("pregnancy_profiles")
+}
+
+// ─── Postpartum Profile ───────────────────────────────────────────────────────
+
+model PostpartumProfile {
+  id              String       @id @default(uuid())
+  userId          String       @unique
+  deliveryDate    DateTime
+  deliveryType    DeliveryType @default(NORMAL)
+  isBreastfeeding Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("postpartum_profiles")
+}
+
+// ─── User Conditions ──────────────────────────────────────────────────────────
+
+model UserCondition {
+  id           String         @id @default(uuid())
+  userId       String
+  condition    ConditionTrack
+  diagnosedAt  DateTime?
+  notes        String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, condition])
+  @@map("user_conditions")
+}
+
+// ─── Myth Database ────────────────────────────────────────────────────────────
+
+model Myth {
+  id           String   @id @default(uuid())
+  claim        String
+  rebuttal     String
+  category     String   // pregnancy | nutrition | cooking | spice
+  sources      String[]
+  shareCardUrl String?
+  createdAt    DateTime @default(now())
+
+  @@map("myths")
+}

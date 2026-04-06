@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary: #f4a228;
+  --primary-dark: #e07b00;
+  --background: #faf9f7;
+  --foreground: #1e1a15;
+  --card: #ffffff;
+  --border: #e8e4dd;
+  --muted: #8a8278;
+}
+
+@layer base {
+  * {
+    @apply border-warm-200;
+  }
+  body {
+    @apply bg-warm-50 text-warm-900 font-sans antialiased;
+  }
+  /* Large touch targets for mobile */
+  button, a[role="button"], [role="tab"] {
+    @apply min-h-[48px] min-w-[12px];
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-warm-200 p-4;
+  }
+  .btn-primary {
+    @apply bg-saffron-500 hover:bg-saffron-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors min-h-touch flex items-center justify-center;
+  }
+  .btn-secondary {
+    @apply bg-warm-100 hover:bg-warm-200 text-warm-800 font-medium py-3 px-6 rounded-xl transition-colors min-h-touch flex items-center justify-center;
+  }
+  .btn-ghost {
+    @apply hover:bg-warm-100 text-warm-700 font-medium py-2 px-4 rounded-lg transition-colors;
+  }
+  .input {
+    @apply w-full border border-warm-300 rounded-xl px-4 py-3 text-warm-900 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-saffron-400 focus:border-transparent bg-white;
+  }
+  .section-title {
+    @apply text-lg font-semibold text-warm-900;
+  }
+  .nutrient-pill {
+    @apply text-xs font-medium px-2.5 py-1 rounded-full;
+  }
+}

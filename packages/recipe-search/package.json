@@ -1,0 +1,13 @@
+{
+  "name": "@posha/recipe-search",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

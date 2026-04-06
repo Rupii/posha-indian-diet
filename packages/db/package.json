@@ -1,0 +1,21 @@
+{
+  "name": "@posha/db",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "generate": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.13.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.13.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.4.0"
+  }
+}
