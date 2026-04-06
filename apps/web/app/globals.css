@@ -50,3 +50,13 @@
     @apply text-xs font-medium px-2.5 py-1 rounded-full;
   }
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
