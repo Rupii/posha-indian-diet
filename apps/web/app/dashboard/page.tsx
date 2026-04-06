@@ -9,8 +9,12 @@ function getGreeting() {
   return 'Good evening'
 }
 
+interface MealSlot { id: string; slotType: string; time: string; recipe: string; calories: number; done: boolean }
+interface DayTotals { consumed: number; target: number; protein: number; proteinTarget: number }
+interface DayData { slots: MealSlot[]; totals: DayTotals }
+
 // 7 days of T3-pregnancy-appropriate Indian meals (no pork, no beef)
-const WEEK_MEALS: Record<number, { slots: typeof DAY0_SLOTS; totals: typeof DAY0_TOTALS }> = {
+const WEEK_MEALS: Record<number, DayData> = {
   0: {
     slots: [
       { id: '1', slotType: 'Breakfast', time: '8–9 am', recipe: 'Methi thepla + dahi', calories: 320, done: true },
@@ -82,10 +86,6 @@ const WEEK_MEALS: Record<number, { slots: typeof DAY0_SLOTS; totals: typeof DAY0
     totals: { consumed: 0, target: 2200, protein: 0, proteinTarget: 75 },
   },
 }
-
-// Needed for type inference above
-const DAY0_SLOTS = WEEK_MEALS[0]?.slots ?? []
-const DAY0_TOTALS = WEEK_MEALS[0]?.totals ?? { consumed: 0, target: 2200, protein: 0, proteinTarget: 75 }
 
 function getDayLabel(offset: number) {
   if (offset === 0) return 'Today'
