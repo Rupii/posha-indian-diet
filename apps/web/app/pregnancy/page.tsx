@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -36,6 +36,52 @@ interface Supplement {
   dose: string
   icon: string
   taken: boolean
+}
+
+// ─── Today's meal plan — cross-reference with AVOID_FOODS ───────────────────
+// These are today's (Day 0) meals from the dashboard. In production this would
+// come from the meal plan API / user's active plan.
+const TODAYS_MEALS = [
+  { slotType: 'Breakfast',     name: 'Ven Pongal + Coconut Chutney + Filter Kaapi' },
+  { slotType: 'Morning snack', name: 'Roasted Makhana + Turmeric Milk' },
+  { slotType: 'Lunch',         name: 'Surmai Fish Curry + Red Rice + Kachumber Salad' },
+  { slotType: 'Chai snack',    name: 'Dates, Walnuts + Warm Doodh' },
+  { slotType: 'Dinner',        name: 'Palak Dal + 2 Phulka + Gajar Sabzi' },
+]
+
+const UNSAFE_KEYWORDS: { keywords: string[]; food: string; reason: string; safe: string }[] = [
+  {
+    keywords: ['surmai', 'king mackerel', 'swordfish', 'shark'],
+    food: 'Surmai (King Mackerel)',
+    reason: 'High-mercury fish. Mercury crosses the placenta and impairs fetal brain & nervous system development.',
+    safe: 'Rohu, Catla, pomfret, or sardines — low-mercury with excellent Omega-3.',
+  },
+  {
+    keywords: ['raw papaya', 'kachcha papaya', 'green papaya'],
+    food: 'Raw/Green Papaya',
+    reason: 'Contains papain and latex compounds that may stimulate uterine contractions.',
+    safe: 'Ripe papaya (orange flesh) in moderate amounts is safe from T2 onwards.',
+  },
+  {
+    keywords: ['raw sprouts', 'uncooked sprouts'],
+    food: 'Raw Sprouts',
+    reason: 'Sprouting conditions breed Listeria and Salmonella — both dangerous in pregnancy.',
+    safe: 'Always cook sprouts before eating; boiled or stir-fried is safe.',
+  },
+]
+
+function checkMealPlanSafety() {
+  const issues: { slotType: string; meal: string; food: string; reason: string; safe: string }[] = []
+  for (const meal of TODAYS_MEALS) {
+    const lower = meal.name.toLowerCase()
+    for (const item of UNSAFE_KEYWORDS) {
+      if (item.keywords.some((k) => lower.includes(k))) {
+        issues.push({ slotType: meal.slotType, meal: meal.name, ...item })
+        break
+      }
+    }
+  }
+  return issues
 }
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
@@ -246,6 +292,14 @@ export default function PregnancyPage() {
   const [trimester, setTrimester] = useState<Trimester>('T3')
   const [gdOn, setGdOn] = useState(false)
   const [supplements, setSupplements] = useState<Supplement[]>(INITIAL_SUPPLEMENTS)
+  const [profileSet, setProfileSet] = useState(true)
+
+  useEffect(() => {
+    const raw = localStorage.getItem('poshaProfile')
+    setProfileSet(!!raw)
+  }, [])
+
+  const mealSafetyIssues = checkMealPlanSafety()
 
   const daysUntilDue = Math.ceil(
     (MOCK_DUE_DATE.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
@@ -304,10 +358,86 @@ export default function PregnancyPage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 pb-24 space-y-5 pt-5">
+        {/* Profile not set banner */}
+        {!profileSet && (
+          <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4 flex gap-3 items-start">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" className="text-amber-500 shrink-0 mt-0.5">
+              <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/>
+            </svg>
+            <div>
+              <p className="text-sm font-semibold text-amber-800">Pregnancy profile not set up</p>
+              <p className="text-xs text-amber-700 mt-1 leading-relaxed">
+                We don&apos;t know you&apos;re pregnant yet — your current meal plan may include unsafe foods.
+                Set up your profile to enable pregnancy-safe filtering on all meal suggestions.
+              </p>
+              <Link href="/onboarding" className="inline-block mt-2 text-xs font-semibold text-amber-800 underline underline-offset-2">
+                Set up pregnancy profile →
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* ── TODAY'S MEAL PLAN SAFETY CHECK ─────────────────────────── */}
+        {mealSafetyIssues.length > 0 && (
+          <section>
+            <div className="rounded-2xl bg-rose-50 border border-rose-200 overflow-hidden">
+              {/* Header */}
+              <div className="px-4 pt-4 pb-3 border-b border-rose-200">
+                <div className="flex items-center gap-2">
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-rose-600">
+                    <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/>
+                  </svg>
+                  <h2 className="text-sm font-bold text-rose-700">
+                    Today&apos;s Meal Plan — {mealSafetyIssues.length} safety concern{mealSafetyIssues.length > 1 ? 's' : ''} found
+                  </h2>
+                </div>
+                <p className="text-xs text-rose-600 mt-1">
+                  {profileSet
+                    ? 'These meals in your current plan need attention during pregnancy.'
+                    : "We spotted these in your general meal plan. If you're pregnant, these need attention."}
+                </p>
+              </div>
+
+              {/* Issues */}
+              <div className="divide-y divide-rose-100">
+                {mealSafetyIssues.map((issue) => (
+                  <div key={issue.slotType} className="px-4 py-3 space-y-1.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-xs font-semibold text-rose-700 uppercase tracking-wide">{issue.slotType}</p>
+                        <p className="text-sm font-medium text-warm-900 mt-0.5">{issue.meal}</p>
+                      </div>
+                      <span className="nutrient-pill bg-rose-100 text-rose-600 shrink-0 mt-0.5">Unsafe</span>
+                    </div>
+                    <p className="text-xs text-rose-600 leading-relaxed">
+                      <span className="font-semibold">{issue.food}:</span> {issue.reason}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-warm-500">Safe swap:</span>
+                      <span className="nutrient-pill bg-forest-50 text-forest-600 text-xs">{issue.safe}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="px-4 py-3 border-t border-rose-100">
+                <Link
+                  href="/meal-plans"
+                  className="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors"
+                >
+                  Go to meal plan to swap →
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* GD Banner */}
         {gdOn && (
           <div className="card bg-amber-50 border-amber-300 flex items-start gap-3">
-            <span className="text-xl">⚠️</span>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-amber-600 shrink-0 mt-0.5">
+              <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/>
+            </svg>
             <div>
               <p className="text-sm font-semibold text-amber-800">Gestational Diabetes Mode ON</p>
               <p className="text-xs text-amber-700 mt-0.5">

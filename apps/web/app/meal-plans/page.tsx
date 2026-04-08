@@ -1,8 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { AppShell } from '@/components/layout/AppShell'
+
+// ── Pregnancy safety check ────────────────────────────────────────────────────
+// These are foods commonly served in Indian meal plans that require a warning
+// when the user is pregnant.
+const PREGNANCY_UNSAFE: { keywords: string[]; reason: string; safe: string }[] = [
+  {
+    keywords: ['surmai', 'king mackerel', 'swordfish', 'shark'],
+    reason: 'High-mercury fish — mercury accumulates in the fetal nervous system and can cause developmental damage.',
+    safe: 'Swap to Rohu, Catla, Pomfret, or sardines — low-mercury, high Omega-3.',
+  },
+  {
+    keywords: ['raw papaya', 'kachcha papaya', 'green papaya'],
+    reason: 'Contains papain and latex compounds that may trigger uterine contractions.',
+    safe: 'Use ripe papaya in small amounts (T2/T3 only).',
+  },
+  {
+    keywords: ['raw sprouts', 'uncooked sprouts'],
+    reason: 'High risk of Listeria and Salmonella contamination.',
+    safe: 'Always lightly cook or sauté sprouts before eating.',
+  },
+  {
+    keywords: ['desi paneer', 'raw paneer', 'unpasteurised'],
+    reason: 'Raw-milk paneer may carry Listeria bacteria — especially risky in T1.',
+    safe: 'Use packaged, pasteurised paneer from reputable brands.',
+  },
+]
+
+function pregnancySafetyWarning(recipeName: string): { reason: string; safe: string } | null {
+  const lower = recipeName.toLowerCase()
+  for (const item of PREGNANCY_UNSAFE) {
+    if (item.keywords.some((k) => lower.includes(k))) {
+      return { reason: item.reason, safe: item.safe }
+    }
+  }
+  return null
+}
 
 const SLOTS = [
   {
@@ -103,6 +139,20 @@ const SWAP_DATA: Record<string, { name: string; serving: string; calories: numbe
 
 export default function MealPlansPage() {
   const [swapOpen, setSwapOpen] = useState<string | null>(null)
+  const [isPregnant, setIsPregnant] = useState(false)
+  const [profileSet, setProfileSet] = useState(true) // assume true until checked
+
+  useEffect(() => {
+    const raw = localStorage.getItem('poshaProfile')
+    if (!raw) {
+      setProfileSet(false)
+      return
+    }
+    try {
+      const profile = JSON.parse(raw)
+      setIsPregnant(profile.segment === 'pregnant')
+    } catch { /* ignore */ }
+  }, [])
 
   return (
     <AppShell activePage="meals">
@@ -112,6 +162,26 @@ export default function MealPlansPage() {
       </div>
 
       <div className="px-4 md:px-8 py-5">
+
+        {/* No profile banner */}
+        {!profileSet && (
+          <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4 mb-5 flex gap-3 items-start">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" className="text-amber-600 shrink-0 mt-0.5">
+              <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/>
+            </svg>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-amber-800">Your profile isn&apos;t set up yet</p>
+              <p className="text-xs text-amber-700 mt-1 leading-relaxed">
+                We&apos;re showing a general meal plan. If you&apos;re pregnant or have dietary needs, some of these suggestions
+                may not be safe for you.
+              </p>
+              <Link href="/onboarding" className="inline-block mt-2 text-xs font-semibold text-amber-700 underline underline-offset-2">
+                Set up your profile →
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Daily totals */}
         <div className="card mb-5">
           <p className="text-xs font-medium text-warm-400 uppercase tracking-wide mb-3">Daily totals</p>
@@ -133,8 +203,13 @@ export default function MealPlansPage() {
 
         {/* Meal slots */}
         <div className="space-y-3 max-w-3xl">
-          {SLOTS.map((slot) => (
-            <div key={slot.id} className="card">
+          {SLOTS.map((slot) => {
+            const safetyWarn = (isPregnant || !profileSet)
+              ? pregnancySafetyWarning(slot.recipe.name)
+              : null
+
+            return (
+            <div key={slot.id} className={`card ${safetyWarn ? 'border-rose-200' : ''}`}>
               <div className="flex items-center gap-2 mb-3">
                 <SlotIcon slotType={slot.slotType} />
                 <span className="font-semibold text-warm-900">{slot.slotType}</span>
@@ -158,12 +233,36 @@ export default function MealPlansPage() {
                 </div>
               </div>
 
+              {/* Pregnancy safety warning */}
+              {safetyWarn && (
+                <div className="mt-3 rounded-xl bg-rose-50 border border-rose-200 p-3 flex gap-2.5">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" className="text-rose-500 shrink-0 mt-0.5">
+                    <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/>
+                  </svg>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-rose-700">
+                      {isPregnant ? 'Not recommended during pregnancy' : 'Check if pregnant: safety flag'}
+                    </p>
+                    <p className="text-xs text-rose-600 mt-0.5 leading-relaxed">{safetyWarn.reason}</p>
+                    <p className="text-xs text-forest-600 font-medium mt-1">Safe swap: {safetyWarn.safe}</p>
+                  </div>
+                  {SWAP_DATA[slot.id] && (
+                    <button
+                      onClick={() => setSwapOpen(slot.id)}
+                      className="shrink-0 text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-100 rounded-lg px-2.5 py-1 transition-colors"
+                    >
+                      Swap
+                    </button>
+                  )}
+                </div>
+              )}
+
               <div className="flex gap-4 mt-3 pt-3 border-t border-warm-100 text-xs text-warm-400">
                 <span>P <span className="font-semibold text-warm-600">{slot.recipe.protein}g</span></span>
                 <span>C <span className="font-semibold text-warm-600">{slot.recipe.carbs}g</span></span>
                 <span>F <span className="font-semibold text-warm-600">{slot.recipe.fat}g</span></span>
                 <div className="flex-1" />
-                {SWAP_DATA[slot.id] && (
+                {SWAP_DATA[slot.id] && !safetyWarn && (
                   <button
                     onClick={() => setSwapOpen(slot.id)}
                     className="text-saffron-600 font-semibold hover:text-saffron-700 transition-colors"
@@ -173,7 +272,8 @@ export default function MealPlansPage() {
                 )}
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
