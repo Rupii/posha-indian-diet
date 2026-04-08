@@ -32,22 +32,22 @@
     @apply bg-white rounded-2xl shadow-sm border border-warm-200 p-4;
   }
   .btn-primary {
-    @apply bg-saffron-500 hover:bg-saffron-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors min-h-touch flex items-center justify-center;
+    @apply bg-saffron-500 hover:bg-saffron-600 active:bg-saffron-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors min-h-touch flex items-center justify-center gap-1.5;
   }
   .btn-secondary {
-    @apply bg-warm-100 hover:bg-warm-200 text-warm-800 font-medium py-3 px-6 rounded-xl transition-colors min-h-touch flex items-center justify-center;
+    @apply bg-warm-100 hover:bg-warm-200 active:bg-warm-300 text-warm-800 font-medium py-3 px-6 rounded-xl transition-colors min-h-touch flex items-center justify-center gap-1.5;
   }
   .btn-ghost {
     @apply hover:bg-warm-100 text-warm-700 font-medium py-2 px-4 rounded-lg transition-colors;
   }
   .input {
-    @apply w-full border border-warm-300 rounded-xl px-4 py-3 text-warm-900 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-saffron-400 focus:border-transparent bg-white;
+    @apply w-full border border-warm-300 rounded-xl px-4 py-3 text-warm-900 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-saffron-400 focus:border-transparent bg-white transition-shadow;
   }
   .section-title {
-    @apply text-lg font-semibold text-warm-900;
+    @apply text-base font-semibold text-warm-900;
   }
   .nutrient-pill {
-    @apply text-xs font-medium px-2.5 py-1 rounded-full;
+    @apply text-xs font-semibold px-2.5 py-0.5 rounded-full;
   }
 }
 

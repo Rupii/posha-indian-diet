@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import UnitToggle from '@/components/unit-toggle/UnitToggle';
+import { AppShell } from '@/components/layout/AppShell';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -200,25 +201,26 @@ export default function LogPage() {
   }
 
   return (
-    <main className="min-h-screen bg-warm-50 px-4 py-6 space-y-6 max-w-lg mx-auto">
+    <AppShell activePage="log">
+    <main className="px-4 md:px-8 py-6 space-y-6 max-w-2xl">
 
       {/* ── Page title ── */}
       <header className="flex items-center justify-between">
-        <h1 className="section-title">Log Food</h1>
-        <span className="text-sm text-warm-400">Today</span>
+        <h1 className="text-xl font-bold text-warm-900">Log Food</h1>
+        <span className="text-sm text-warm-400 font-medium">Today</span>
       </header>
 
       {/* ── Search bar ── */}
       <div className="relative">
         <span
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-400 pointer-events-none"
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-warm-400 pointer-events-none"
           aria-hidden="true"
         >
-          🔍
+          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         </span>
         <input
           type="search"
-          className="input pl-9 pr-4"
+          className="input pl-10 pr-4"
           placeholder="Search dal, poha, banana..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -233,7 +235,9 @@ export default function LogPage() {
         aria-label="Log with voice"
         onClick={() => alert("Voice logging coming soon! Say: 'ek katori dal'")}
       >
-        <span aria-hidden="true" className="text-lg">🎙️</span>
+        <span aria-hidden="true">
+          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </span>
         <span>
           Log with voice{' '}
           <span className="text-warm-400 font-normal text-sm">
@@ -404,5 +408,6 @@ export default function LogPage() {
         </form>
       </section>
     </main>
+    </AppShell>
   );
 }

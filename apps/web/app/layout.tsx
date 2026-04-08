@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1, // prevents zoom on input focus (mobile UX)
   themeColor: '#f4a228',
 }
 
