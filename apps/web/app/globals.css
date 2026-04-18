@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Archivo:ital,wght@0,400;0,500;0,700;0,800;0,900;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
   --primary: #f4a228;
@@ -12,6 +12,21 @@
   --card: #ffffff;
   --border: #e8e4dd;
   --muted: #8a8278;
+
+  /* Boutique tokens */
+  --b-bg: #f3e9d2;
+  --b-bg-dark: #1e2a1a;
+  --b-ink: #141311;
+  --b-ink2: rgba(20,19,17,0.7);
+  --b-ink3: rgba(20,19,17,0.5);
+  --b-cream: #fbf4e1;
+  --b-chili: #d04528;
+  --b-turmeric: #e8a835;
+  --b-moss: #4a5a2e;
+  --b-plum: #6b2d3a;
+  --b-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --b-serif: "Fraunces", Georgia, serif;
+  --b-mono: "DM Mono", ui-monospace, Menlo, monospace;
 }
 
 @layer base {

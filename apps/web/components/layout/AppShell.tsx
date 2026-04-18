@@ -2,62 +2,43 @@
 
 import Link from 'next/link'
 
-// SVG icons — no emojis in navigation
-function IconHome({ active }: { active: boolean }) {
-  return (
-    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 2} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-      <polyline points="9,22 9,12 15,12 15,22" />
-    </svg>
-  )
+const B = {
+  bg:      '#f3e9d2',
+  bgDark:  '#1e2a1a',
+  ink:     '#141311',
+  ink2:    'rgba(20,19,17,0.7)',
+  cream:   '#fbf4e1',
+  chili:   '#d04528',
+  turmeric:'#e8a835',
+  display: '"Archivo", "Helvetica Neue", Arial, sans-serif',
+  mono:    '"DM Mono", ui-monospace, Menlo, monospace',
 }
 
-function IconMeals({ active }: { active: boolean }) {
-  return (
-    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 2} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2" />
-      <path d="M7 2v20" />
-      <path d="M21 15V2s-5 2-5 8v5" />
-      <path d="M16 15h5v7h-5z" />
-    </svg>
-  )
-}
-
-function IconLog({ active }: { active: boolean }) {
-  return (
-    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 2} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="8" x2="12" y2="16" />
-      <line x1="8" y1="12" x2="16" y2="12" />
-    </svg>
-  )
-}
-
-function IconRecipes({ active }: { active: boolean }) {
-  return (
-    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 2} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
-      <line x1="8" y1="7" x2="16" y2="7" />
-      <line x1="8" y1="11" x2="13" y2="11" />
-    </svg>
-  )
-}
-
-function IconLeaf() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-forest-500">
-      <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 008 20C19 20 22 3 22 3c-1 2-8 2-11 5 3 3 9 2 11 2" />
-    </svg>
-  )
-}
-
-const NAV_ITEMS = [
-  { id: 'home',    label: 'Home',      href: '/dashboard',  Icon: IconHome },
-  { id: 'meals',   label: 'Meal Plan', href: '/meal-plans', Icon: IconMeals },
-  { id: 'log',     label: 'Log Food',  href: '/log',        Icon: IconLog },
-  { id: 'recipes', label: 'Recipes',   href: '/recipes',    Icon: IconRecipes },
+const DESKTOP_NAV = [
+  { label: 'TODAY',    href: '/dashboard',  id: 'home'    },
+  { label: 'MENU',     href: '/meal-plans', id: 'meals'   },
+  { label: 'LOG',      href: '/log',        id: 'log'     },
+  { label: 'COOKBOOK', href: '/recipes',    id: 'recipes' },
+  { label: 'CARE',     href: '/pregnancy',  id: 'care'    },
+  { label: 'JOURNAL',  href: '#',           id: 'journal' },
 ]
+
+const MOBILE_NAV_LEFT  = [
+  { id: 'home',  label: 'HOME', href: '/dashboard'  },
+  { id: 'meals', label: 'MENU', href: '/meal-plans' },
+]
+const MOBILE_NAV_RIGHT = [
+  { id: 'recipes', label: 'COOK', href: '/recipes'  },
+  { id: 'care',    label: 'ME',   href: '/pregnancy' },
+]
+
+function PlusIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <path d="M12 5v14M5 12h14"/>
+    </svg>
+  )
+}
 
 export function AppShell({
   children,
@@ -66,84 +47,130 @@ export function AppShell({
   children: React.ReactNode
   activePage: string
 }) {
+  const today = new Date()
+  const dateStr = today
+    .toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })
+    .toUpperCase()
+    .replace(', ', ' · ')
+
   return (
-    <div className="min-h-screen bg-warm-50">
-      {/* ── Top header ───────────────────────────────────────────────── */}
-      <header className="bg-white border-b border-warm-200 px-4 md:px-6 h-14 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-2">
-          <IconLeaf />
-          <span className="font-bold text-warm-900 text-lg tracking-tight">Posha</span>
+    <div style={{ minHeight: '100vh', background: B.bg, color: B.ink, fontFamily: B.display }}>
+
+      {/* ── Desktop top nav ──────────────────────────────── */}
+      <header
+        className="hidden md:flex items-center justify-between sticky top-0 z-40"
+        style={{ padding: '16px 40px', borderBottom: `1.5px solid ${B.ink}`, background: B.bg }}
+      >
+        <div style={{ fontWeight: 900, fontSize: 22, letterSpacing: -1, textTransform: 'uppercase' }}>
+          POSHA<span style={{ color: B.chili }}>.</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="hidden md:block text-sm text-warm-400 font-medium">Haritha · T3, Week 33</span>
-          <button className="w-9 h-9 rounded-full bg-saffron-100 flex items-center justify-center text-sm font-bold text-saffron-700 hover:bg-saffron-200 transition-colors">
-            H
-          </button>
-        </div>
+        <nav className="flex gap-5">
+          {DESKTOP_NAV.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              style={{
+                color: activePage === item.id ? B.chili : B.ink,
+                fontFamily: B.display,
+                fontSize: 12,
+                fontWeight: 800,
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <Link
+          href="/log"
+          style={{
+            background: B.ink, color: B.cream, borderRadius: 999,
+            padding: '10px 16px', fontFamily: B.display,
+            fontSize: 12, fontWeight: 900, letterSpacing: 0.5,
+            textTransform: 'uppercase', display: 'inline-flex',
+            alignItems: 'center', gap: 6, textDecoration: 'none',
+          }}
+        >
+          + LOG A MEAL
+        </Link>
       </header>
 
-      <div className="flex">
-        {/* ── Sidebar (desktop only) ────────────────────────────────── */}
-        <aside className="hidden md:flex flex-col w-56 bg-white border-r border-warm-200 sticky top-14 h-[calc(100vh-3.5rem)] shrink-0 pt-5 pb-6">
-          <nav className="flex flex-col gap-0.5 px-3 flex-1">
-            {NAV_ITEMS.map(({ id, label, href, Icon }) => {
-              const active = activePage === id
-              return (
-                <Link
-                  key={id}
-                  href={href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                    active
-                      ? 'bg-saffron-50 text-saffron-700'
-                      : 'text-warm-500 hover:text-warm-900 hover:bg-warm-100'
-                  }`}
-                >
-                  <span className={active ? 'text-saffron-600' : 'text-warm-400'}>
-                    <Icon active={active} />
-                  </span>
-                  {label}
-                </Link>
-              )
-            })}
-          </nav>
-
-          {/* Pregnancy tracker widget */}
-          <div className="mx-3 p-3.5 bg-rose-50 rounded-2xl border border-rose-100">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-2 h-2 rounded-full bg-rose-400" />
-              <p className="text-xs font-semibold text-rose-600">Pregnancy</p>
-            </div>
-            <p className="text-sm font-semibold text-rose-700">Week 33 · T3</p>
-            <p className="text-xs text-rose-400 mt-0.5">Due 25 May 2026</p>
-            <Link href="/pregnancy" className="block mt-2.5 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors">
-              View tracker →
-            </Link>
+      {/* ── Mobile top bar ────────────────────────────────── */}
+      <div
+        className="md:hidden flex items-center justify-between sticky top-0 z-40"
+        style={{ padding: '12px 20px 0', background: B.bg }}
+      >
+        <div style={{ fontFamily: B.display, fontWeight: 900, fontSize: 22, letterSpacing: -1, textTransform: 'uppercase' }}>
+          POSHA<span style={{ color: B.chili }}>.</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span style={{ fontFamily: B.mono, fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', color: B.ink2 }}>
+            {dateStr}
+          </span>
+          <div style={{
+            width: 30, height: 30, borderRadius: 15, background: B.ink, color: B.cream,
+            display: 'grid', placeItems: 'center', fontWeight: 900, fontSize: 13,
+          }}>
+            H
           </div>
-        </aside>
-
-        {/* ── Main content ──────────────────────────────────────────── */}
-        <main className="flex-1 min-w-0 pb-20 md:pb-10">
-          {children}
-        </main>
+        </div>
       </div>
 
-      {/* ── Bottom nav (mobile only) ──────────────────────────────── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-warm-200 flex z-40 safe-bottom">
-        {NAV_ITEMS.map(({ id, label, href, Icon }) => {
-          const active = activePage === id
-          return (
+      {/* ── Main content ──────────────────────────────────── */}
+      <main className="pb-28 md:pb-10">
+        {children}
+      </main>
+
+      {/* ── Mobile floating pill nav ──────────────────────── */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50" style={{ padding: '10px 14px 24px' }}>
+        <div style={{
+          background: B.ink, color: B.cream, borderRadius: 999,
+          padding: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        }}>
+          {MOBILE_NAV_LEFT.map((item) => (
             <Link
-              key={id}
-              href={href}
-              className={`flex-1 flex flex-col items-center py-2 gap-0.5 text-xs font-medium transition-colors ${
-                active ? 'text-saffron-600' : 'text-warm-400'
-              }`}
+              key={item.id}
+              href={item.href}
+              style={{
+                padding: '8px 14px', borderRadius: 999,
+                background: activePage === item.id ? B.cream : 'transparent',
+                color: activePage === item.id ? B.ink : B.cream,
+                fontFamily: B.display, fontWeight: 900, fontSize: 11,
+                letterSpacing: 0.5, textDecoration: 'none', textTransform: 'uppercase',
+                display: 'block',
+              }}
             >
-              <Icon active={active} />
-              {label}
+              {item.label}
             </Link>
-          )
-        })}
+          ))}
+          <Link
+            href="/log"
+            style={{
+              width: 46, height: 46, borderRadius: 23, background: B.chili,
+              color: B.cream, display: 'grid', placeItems: 'center', flexShrink: 0,
+            }}
+          >
+            <PlusIcon />
+          </Link>
+          {MOBILE_NAV_RIGHT.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              style={{
+                padding: '8px 14px', borderRadius: 999,
+                background: activePage === item.id ? B.cream : 'transparent',
+                color: activePage === item.id ? B.ink : B.cream,
+                fontFamily: B.display, fontWeight: 900, fontSize: 11,
+                letterSpacing: 0.5, textDecoration: 'none', textTransform: 'uppercase',
+                display: 'block',
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
       </nav>
     </div>
   )

@@ -42,9 +42,23 @@ const config: Config = {
           800: '#363028',
           900: '#1e1a15',
         },
+        // Boutique palette
+        boutique: {
+          bg:      '#f3e9d2',
+          dark:    '#1e2a1a',
+          chili:   '#d04528',
+          turmeric:'#e8a835',
+          moss:    '#4a5a2e',
+          plum:    '#6b2d3a',
+          cream:   '#fbf4e1',
+          ink:     '#141311',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans:    ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Archivo', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        serif:   ['Fraunces', 'Georgia', 'serif'],
+        mono2:   ['"DM Mono"', 'ui-monospace', 'Menlo', 'monospace'],
       },
       borderRadius: {
         '2xl': '1rem',
