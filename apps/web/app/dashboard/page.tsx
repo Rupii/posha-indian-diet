@@ -517,23 +517,39 @@ export default function DashboardPage() {
                       {slot.sub}.
                     </div>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 14 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 14 }}>
                     <span style={{ fontFamily: B.display, fontSize: 28, fontWeight: 900, letterSpacing: -1 }}>
                       {slot.calories}<span style={{ fontFamily: B.mono, fontSize: 10, letterSpacing: 1, marginLeft: 3, fontWeight: 500 }}>KCAL</span>
                     </span>
-                    {!slot.done && (
+                    <div style={{ display: 'flex', gap: 6 }}>
                       <button
-                        onClick={() => swapMeal(slot.id, slot.slotType, slot.dish)}
+                        onClick={() => toggleDone(slot.id)}
                         style={{
-                          padding: '6px 10px', borderRadius: 999, border: `1.5px solid ${pal.acc}`,
-                          background: 'transparent', color: pal.acc,
+                          flex: 1, padding: '8px 10px', borderRadius: 999,
+                          border: `1.5px solid ${pal.acc}`,
+                          background: slot.done ? pal.acc : 'transparent',
+                          color: slot.done ? pal.bg : pal.acc,
                           fontFamily: B.display, fontSize: 10, fontWeight: 900,
                           letterSpacing: 0.5, textTransform: 'uppercase', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
                         }}
                       >
-                        SWAP
+                        {slot.done ? <><CheckIcon /> DONE</> : 'MARK DONE'}
                       </button>
-                    )}
+                      {!slot.done && (
+                        <button
+                          onClick={() => swapMeal(slot.id, slot.slotType, slot.dish)}
+                          style={{
+                            padding: '8px 10px', borderRadius: 999, border: `1.5px solid ${pal.acc}`,
+                            background: 'transparent', color: pal.acc,
+                            fontFamily: B.display, fontSize: 10, fontWeight: 900,
+                            letterSpacing: 0.5, textTransform: 'uppercase', cursor: 'pointer',
+                          }}
+                        >
+                          SWAP
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               )

@@ -11,6 +11,8 @@ export interface MealSlot {
   region: string
   state?: string
   tags: string[]
+  /** 'egg' = egg-based non-veg (egg users see this; veg users don't) */
+  dietaryGroup?: 'egg'
 }
 
 export interface RegionState {
@@ -93,6 +95,11 @@ export const SOUTH_INDIAN_MEALS: MealSlot[] = [
   { day:6, slotType:'Lunch',         time:'1–2 pm',  dish:'Kozhukattai + Sambar',   sub:'Steamed rice cake, vegetable filling',       calories:380, protein:9,  carbs:62, fat:9,  region:'south', state:'tamil_nadu',     tags:['Steamed','Light','Vegetarian'] },
   { day:6, slotType:'Chai Snack',    time:'4–5 pm',  dish:'Ribbon Pakora + Chai',   sub:'Yam fritters, rice flour, cardamom tea',     calories:220, protein:4,  carbs:34, fat:8,  region:'south', state:'karnataka',      tags:['Crispy','Root vegetable','Seasonal'] },
   { day:6, slotType:'Dinner',        time:'8–9 pm',  dish:'Coconut Rice + Stir-fry',sub:'Rice, grated coconut, mustard, curry leaf',  calories:420, protein:10, carbs:66, fat:12, region:'south', state:'tamil_nadu',     tags:['Fragrant','Coconut','Light'] },
+  // Egg dishes (shown for egg dietary; redistributed for non_veg on all-veg days)
+  { day:0, slotType:'Dinner',        time:'8–9 pm',  dish:'Muttai Masala + Rice',   sub:'Egg curry, tomato, onion, South Indian spices', calories:480, protein:22, carbs:58, fat:16, region:'south', state:'tamil_nadu',  tags:['High-protein','Egg-based','Spicy'], dietaryGroup:'egg' },
+  { day:2, slotType:'Dinner',        time:'8–9 pm',  dish:'Nadan Mutta Curry + Rice',sub:'Kerala egg curry, coconut milk, turmeric',   calories:490, protein:20, carbs:60, fat:16, region:'south', state:'kerala',         tags:['Coconut milk','Egg-based','Traditional'], dietaryGroup:'egg' },
+  { day:4, slotType:'Dinner',        time:'8–9 pm',  dish:'Andhra Egg Masala + Rice',sub:'Egg, tamarind, chili, gongura tempering',    calories:500, protein:22, carbs:62, fat:16, region:'south', state:'andhra_pradesh', tags:['Spicy','Egg-based','Tangy'], dietaryGroup:'egg' },
+  { day:6, slotType:'Dinner',        time:'8–9 pm',  dish:'Egg Dosa + Sambar',      sub:'Crispy dosa, egg filling, coconut chutney',  calories:460, protein:20, carbs:56, fat:15, region:'south', state:'karnataka',      tags:['Crispy','Egg-based','Quick'], dietaryGroup:'egg' },
 ]
 
 // ── North Indian Meals ────────────────────────────────────────────────────────
@@ -139,6 +146,11 @@ export const NORTH_INDIAN_MEALS: MealSlot[] = [
   { day:6, slotType:'Lunch',         time:'1–2 pm',  dish:'Nihari + Naan',          sub:'Slow-cooked meat stew, leavened bread',      calories:580, protein:28, carbs:66, fat:18, region:'north',                         tags:['Slow-cooked','Rich','Warming'] },
   { day:6, slotType:'Chai Snack',    time:'4–5 pm',  dish:'Gajar Halwa + Warm Milk',sub:'Carrot pudding, ghee, jaggery, milk',        calories:280, protein:6,  carbs:42, fat:9,  region:'north',                         tags:['Sweet','Vitamin A','Seasonal'] },
   { day:6, slotType:'Dinner',        time:'8–9 pm',  dish:'Dal + Phulka + Raita',   sub:'Red lentil curry, wheat roti, yogurt',       calories:420, protein:16, carbs:60, fat:9,  region:'north',                         tags:['Light','Probiotic','Balanced'] },
+  // Egg dishes (shown for egg dietary; redistributed for non_veg on all-veg days)
+  { day:0, slotType:'Dinner',        time:'8–9 pm',  dish:'Anda Masala + Roti',     sub:'Egg curry, tomato, onion, garam masala',    calories:480, protein:22, carbs:54, fat:18, region:'north',                         tags:['High-protein','Egg-based','Quick'], dietaryGroup:'egg' },
+  { day:1, slotType:'Dinner',        time:'8–9 pm',  dish:'Egg Bhurji + Paratha',   sub:'Scrambled eggs, onion, chili, cumin',        calories:460, protein:24, carbs:52, fat:18, region:'north',                         tags:['Quick','Egg-based','High-protein'], dietaryGroup:'egg' },
+  { day:2, slotType:'Dinner',        time:'8–9 pm',  dish:'Dhaba Egg Curry + Rice', sub:'Dhaba-style egg curry, tomato base',         calories:500, protein:22, carbs:60, fat:18, region:'north',                         tags:['Dhaba style','Egg-based','Rich'], dietaryGroup:'egg' },
+  { day:4, slotType:'Dinner',        time:'8–9 pm',  dish:'Egg Keema + Roti',       sub:'Minced egg, onion, ginger, coriander',       calories:490, protein:24, carbs:54, fat:20, region:'north',                         tags:['High-protein','Egg-based','Filling'], dietaryGroup:'egg' },
 ]
 
 // ── East Indian Meals ─────────────────────────────────────────────────────────
@@ -185,6 +197,14 @@ export const EAST_INDIAN_MEALS: MealSlot[] = [
   { day:6, slotType:'Lunch',         time:'1–2 pm',  dish:'Chingri Malai + Rice',   sub:'Shrimp, coconut milk, green chili, ginger',  calories:540, protein:28, carbs:62, fat:16, region:'east', state:'west_bengal',     tags:['Creamy','Omega-3','Special occasion'] },
   { day:6, slotType:'Chai Snack',    time:'4–5 pm',  dish:'Kheer',                  sub:'Rice, milk, jaggery, cardamom, nutmeg',      calories:240, protein:6,  carbs:40, fat:6,  region:'east',                         tags:['Creamy','Comforting','Traditional'] },
   { day:6, slotType:'Dinner',        time:'8–9 pm',  dish:'Bhetki Fish Curry + Rice',sub:'Bhetki fish, tomato gravy, curry leaves',   calories:530, protein:32, carbs:58, fat:14, region:'east', state:'west_bengal',     tags:['Premium fish','Omega-3','Festive'] },
+  // Egg dishes (Bengali/Odia egg preparations for egg dietary users)
+  { day:0, slotType:'Lunch',         time:'1–2 pm',  dish:'Dimer Dalna + Rice',     sub:'Bengali egg curry, potato, tomato, spices', calories:490, protein:22, carbs:62, fat:16, region:'east', state:'west_bengal',     tags:['Egg-based','High-protein','Comfort'], dietaryGroup:'egg' },
+  { day:1, slotType:'Dinner',        time:'8–9 pm',  dish:'Dimer Jhol + Rice',      sub:'Light egg curry, turmeric, coriander',       calories:470, protein:20, carbs:60, fat:15, region:'east', state:'west_bengal',     tags:['Egg-based','Light','Traditional'], dietaryGroup:'egg' },
+  { day:2, slotType:'Dinner',        time:'8–9 pm',  dish:'Omelette Roll + Rice',   sub:'Egg roll, onion, green chili, coriander',    calories:430, protein:18, carbs:52, fat:16, region:'east',                         tags:['Egg-based','Street style','Quick'], dietaryGroup:'egg' },
+  { day:3, slotType:'Lunch',         time:'1–2 pm',  dish:'Anda Kosha + Rice',      sub:'Thick egg gravy, garam masala, ginger',      calories:510, protein:22, carbs:64, fat:18, region:'east', state:'west_bengal',     tags:['Egg-based','Rich','Hearty'], dietaryGroup:'egg' },
+  { day:4, slotType:'Lunch',         time:'1–2 pm',  dish:'Dimer Curry + Roti',     sub:'Egg curry, potatoes, green chili, cumin',    calories:480, protein:22, carbs:56, fat:18, region:'east', state:'odisha',          tags:['Egg-based','Homestyle','Protein-rich'], dietaryGroup:'egg' },
+  { day:5, slotType:'Lunch',         time:'1–2 pm',  dish:'Egg Bhapa + Rice',       sub:'Steamed egg, mustard paste, coconut milk',   calories:450, protein:20, carbs:58, fat:16, region:'east', state:'west_bengal',     tags:['Egg-based','Steamed','Aromatic'], dietaryGroup:'egg' },
+  { day:6, slotType:'Lunch',         time:'1–2 pm',  dish:'Dimer Bhurji + Paratha', sub:'Bengali egg scramble, onion, turmeric',      calories:460, protein:22, carbs:54, fat:18, region:'east', state:'west_bengal',     tags:['Egg-based','Quick','Traditional'], dietaryGroup:'egg' },
 ]
 
 // ── West Indian Meals ─────────────────────────────────────────────────────────
@@ -231,6 +251,11 @@ export const WEST_INDIAN_MEALS: MealSlot[] = [
   { day:6, slotType:'Lunch',         time:'1–2 pm',  dish:'Goan Prawn Curry + Rice', sub:'Coconut prawn curry, red chili, turmeric',  calories:510, protein:30, carbs:58, fat:14, region:'west', state:'goa',             tags:['Omega-3','Creamy coconut','Protein-rich'] },
   { day:6, slotType:'Chai Snack',    time:'4–5 pm',  dish:'Modak + Warm Milk',      sub:'Rice-jaggery sweet, warm milk',              calories:250, protein:5,  carbs:48, fat:4,  region:'west', state:'maharashtra',     tags:['Sweet treat','Traditional','Festive'] },
   { day:6, slotType:'Dinner',        time:'8–9 pm',  dish:'Zunka + Bhakri',         sub:'Dry besan curry, jowar/bajra flatbread',     calories:430, protein:13, carbs:60, fat:12, region:'west', state:'maharashtra',     tags:['Traditional','Millet','Protein boost'] },
+  // Egg dishes for egg dietary users + non_veg redistribution on day 1 (all-veg)
+  { day:1, slotType:'Dinner',        time:'8–9 pm',  dish:'Egg Bhurji + Pav',       sub:'Scrambled eggs, onion, chili, Mumbai style', calories:440, protein:22, carbs:50, fat:18, region:'west', state:'maharashtra',     tags:['Egg-based','Street food','High-protein'], dietaryGroup:'egg' },
+  { day:0, slotType:'Dinner',        time:'8–9 pm',  dish:'Anda Gassi + Rice',      sub:'Coastal egg curry, coconut, tamarind',       calories:490, protein:22, carbs:60, fat:17, region:'west', state:'goa',             tags:['Egg-based','Coastal style','Protein-rich'], dietaryGroup:'egg' },
+  { day:3, slotType:'Dinner',        time:'8–9 pm',  dish:'Egg Keema Pav',          sub:'Egg mince, onion, Kolhapuri spices, bread',  calories:470, protein:24, carbs:52, fat:18, region:'west', state:'maharashtra',     tags:['Egg-based','Spicy','Filling'], dietaryGroup:'egg' },
+  { day:5, slotType:'Dinner',        time:'8–9 pm',  dish:'Omelette + Bhakri',      sub:'Egg omelette, jowar flatbread, coriander',   calories:420, protein:20, carbs:48, fat:16, region:'west', state:'maharashtra',     tags:['Egg-based','Millet','Quick'], dietaryGroup:'egg' },
 ]
 
 const NON_VEG_KEYWORDS = [
@@ -255,16 +280,42 @@ export function getMealsForProfile(
     east:  EAST_INDIAN_MEALS,
     west:  WEST_INDIAN_MEALS,
   }
-  let base = pool[region] ?? NORTH_INDIAN_MEALS
+  let base = [...(pool[region] ?? NORTH_INDIAN_MEALS)]
 
   // Filter by dietary preference
   if (dietary === 'veg' || dietary === 'jain' || dietary === 'satvik') {
-    base = base.filter(m => !isNonVeg(m))
+    // Remove all non-veg (fish, meat, eggs)
+    base = base.filter(m => !isNonVeg(m) && !m.dietaryGroup)
   } else if (dietary === 'egg') {
-    base = base.filter(m => {
-      const text = (m.dish + ' ' + m.sub).toLowerCase()
-      return !isNonVeg(m) || text.includes('egg')
-    })
+    // Keep veg meals + egg-tagged meals; remove fish/meat
+    base = base.filter(m => !m.dietaryGroup ? !isNonVeg(m) : m.dietaryGroup === 'egg')
+  } else if (dietary === 'non_veg') {
+    // Remove egg-tagged meals (non_veg users prefer fish/meat over egg dishes)
+    // then ensure every day has at least 1 non-veg meal at dinner
+    base = base.filter(m => !m.dietaryGroup)
+    const nonVegPool = base.filter(m => isNonVeg(m))
+    if (nonVegPool.length > 0) {
+      let nvIdx = 0
+      const result: MealSlot[] = []
+      for (let d = 0; d <= 6; d++) {
+        const daySlots = base.filter(m => m.day === d)
+        if (daySlots.some(m => isNonVeg(m))) {
+          result.push(...daySlots)
+        } else {
+          // Replace dinner slot with next non-veg meal from pool (rotating)
+          const donor = nonVegPool[nvIdx % nonVegPool.length]
+          nvIdx++
+          result.push(
+            ...daySlots.filter(m => m.slotType !== 'Dinner'),
+            { ...donor, day: d, slotType: 'Dinner', time: '8–9 pm' },
+          )
+        }
+      }
+      base = result
+    }
+  } else {
+    // No dietary filter — remove egg-specific dishes (they'd create duplicate slots)
+    base = base.filter(m => !m.dietaryGroup)
   }
 
   // State-preference: bubble state-matching meals to front of each day slot
