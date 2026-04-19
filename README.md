@@ -2,7 +2,18 @@
 
 **Eat well, the Indian way.**
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-india--eats.vercel.app-black?style=flat&logo=vercel&logoColor=white)](https://india-eats.vercel.app/)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Posha is a diet and nutrition platform built for Indian eating patterns — from regional thalis to pregnancy confinement meals — serving anyone who has ever found generic calorie trackers culturally tone-deaf.
+
+## Live App
+
+**[india-eats.vercel.app](https://india-eats.vercel.app/)**
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Rupii/posha-indian-diet)
 
 ## Tech Stack
 
@@ -13,6 +24,7 @@ Posha is a diet and nutrition platform built for Indian eating patterns — from
 | ORM & Migrations | Prisma |
 | Styling | Tailwind CSS |
 | Monorepo | Turborepo |
+| Deployment | Vercel |
 
 ## Monorepo Structure
 
@@ -38,6 +50,7 @@ npm run dev
 
 ## Features
 
+- **Regional meal plans** — South, North, East, and West Indian cuisines with state-level personalisation
 - **Dual-unit portions** — Log food in grams or traditional katori measures; the engine converts transparently
 - **Intelligent meal swap** — Swap any dish for a nutritionally equivalent alternative within your region and dietary preference
 - **Pregnancy trimester tracking** — Macro and micronutrient targets shift automatically across the three trimesters with folate and iron emphasis
